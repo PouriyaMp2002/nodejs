@@ -1,0 +1,8 @@
+---
+
+
+- name: Create app directory
+  file:
+    path: /opt/nodeapp
+    state: directory
+    mode: '0755'

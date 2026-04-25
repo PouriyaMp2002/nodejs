@@ -1,0 +1,9 @@
+services:
+  app:
+    image: ${IMAGE_URI}
+    container_name: nodeapp
+    restart: unless-stopped
+    env_file:
+      - .env
+     
+    - "${APP_PORT}:3000"

@@ -1,0 +1,29 @@
+plugin: amazon.aws.aws_ec2
+
+regions:
+  - us-east-1
+
+filters:
+  instance-state-name: # It takes only running state machines
+    - running
+
+  tag:Project: #Takes ONLY this tag from ec2s
+    - nodejs-devops
+
+hostnames:
+  - tag:Name #It's better to take it from their names. 
+  
+
+compose:
+  ansible_host: private_ip_address
+  ansible_user: ubuntu
+  ansible_ssh_private_key_file: "/c/Users/Pouriya/Desktop/project/Infra/devops" 
+  # Must be  accessible with ansible runtime env. 
+
+groups: 
+  jenkins: "tags.Role == 'jenkins'"
+  deploy: "tags.Role == 'deploy'"
+
+
+# To test inventory: ansible-inventory -i inventory_aws.yml --graph
+# Then: ansible-inventory -i inventory_aws.yml --list

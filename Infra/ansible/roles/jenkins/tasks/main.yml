@@ -1,0 +1,155 @@
+---
+# ---------- CLEAN OLD CONFIG ----------
+- name: Remove old repo/key files
+  file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - /etc/apt/sources.list.d/jenkins.list
+    - /etc/apt/sources.list.d/nodesource.list
+    - /etc/apt/sources.list.d/trivy.list
+    - /etc/apt/keyrings/jenkins-keyring.asc
+    - /etc/apt/keyrings/nodesource.gpg
+    - /usr/share/keyrings/trivy.gpg
+    - /tmp/nodesource-repo.gpg.key
+
+- name: Remove legacy Jenkins repo entries
+  lineinfile:
+    path: /etc/apt/sources.list
+    regexp: '^deb .*pkg\.jenkins\.io/.*$'
+    state: absent
+  ignore_errors: true
+
+- name: Remove legacy NodeSource repo entries
+  lineinfile:
+    path: /etc/apt/sources.list
+    regexp: '^deb .*deb\.nodesource\.com/.*$'
+    state: absent
+  ignore_errors: true
+
+# ---------- JENKINS ----------
+- name: Add Jenkins GPG key
+  get_url:
+    url: https://pkg.jenkins.io/debian-stable/jenkins.io-2026.key
+    dest: /etc/apt/keyrings/jenkins-keyring.asc
+    mode: '0644'
+    force: yes
+
+- name: Add Jenkins repository
+  copy:
+    dest: /etc/apt/sources.list.d/jenkins.list
+    mode: '0644'
+    content: |
+      deb [signed-by=/etc/apt/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/
+
+# ---------- NODE.JS ----------
+- name: Download NodeSource GPG key
+  get_url:
+    url: https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key
+    dest: /tmp/nodesource-repo.gpg.key
+    mode: '0644'
+    force: yes
+
+- name: Convert NodeSource key
+  command: gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg /tmp/nodesource-repo.gpg.key
+  args:
+    creates: /etc/apt/keyrings/nodesource.gpg
+
+- name: Add NodeSource repository
+  copy:
+    dest: /etc/apt/sources.list.d/nodesource.list
+    mode: '0644'
+    content: |
+      deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main
+
+# ---------- TRIVY ----------
+- name: Add Trivy key
+  shell: |
+    wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor -o /usr/share/keyrings/trivy.gpg
+  args:
+    creates: /usr/share/keyrings/trivy.gpg
+
+- name: Add Trivy repo
+  copy:
+    dest: /etc/apt/sources.list.d/trivy.list
+    mode: '0644'
+    content: |
+      deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb generic main
+
+# ---------- INSTALL ----------
+- name: Update apt cache
+  command: apt-get update
+  changed_when: false
+
+- name: Install Jenkins, Node.js, Trivy
+  apt:
+    name:
+      - jenkins
+      - nodejs
+      - trivy
+    state: present
+
+# ---------- SERVICE ----------
+- name: Enable and start Jenkins
+  service:
+    name: jenkins
+    state: started
+    enabled: yes
+
+- name: Restart Jenkins
+  service:
+    name: jenkins
+    state: restarted
+
+# ---------- SONARQUBE ----------
+- name: Set vm.max_map_count
+  ansible.builtin.sysctl:
+    name: vm.max_map_count
+    value: "524288"
+    state: present
+    reload: yes
+
+- name: Set fs.file-max
+  ansible.builtin.sysctl:
+    name: fs.file-max
+    value: "131072"
+    state: present
+    reload: yes
+
+- name: Create SonarQube directory
+  ansible.builtin.file:
+    path: /opt/sonarqube
+    state: directory
+    mode: "0755"
+
+- name: Create SonarQube compose file
+  ansible.builtin.copy:
+    dest: /opt/sonarqube/docker-compose.yml
+    mode: "0644"
+    content: |
+      services:
+        sonarqube:
+          image: sonarqube
+          container_name: sonarqube
+          restart: unless-stopped
+          ports:
+            - "9000:9000"
+          volumes:
+            - sonarqube_data:/opt/sonarqube/data
+            - sonarqube_extensions:/opt/sonarqube/extensions
+            - sonarqube_logs:/opt/sonarqube/logs
+
+      volumes:
+        sonarqube_data:
+        sonarqube_extensions:
+        sonarqube_logs:
+
+- name: Pull latest SonarQube image
+  ansible.builtin.command: docker compose pull
+  args:
+    chdir: /opt/sonarqube
+
+- name: Run SonarQube
+  ansible.builtin.command: docker compose up -d
+  args:
+    chdir: /opt/sonarqube
