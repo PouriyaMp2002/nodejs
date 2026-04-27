@@ -55,3 +55,20 @@ resource "aws_instance" "Test" {
   }
   key_name = aws_key_pair.devops.key_name
 }
+
+
+resource "aws_instance" "SQ" {
+  ami           = "ami-0ec10929233384c7f"
+  instance_type = var.Instance_type
+
+  root_block_device {
+    volume_size = 30
+    volume_type = "gp3"
+  }
+  vpc_security_group_ids = [aws_security_group.sonar.id]
+
+  tags = {
+    Name = "SonarQube"
+  }
+  key_name = aws_key_pair.devops.key_name
+}
