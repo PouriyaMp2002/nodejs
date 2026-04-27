@@ -14,7 +14,7 @@ RUN npm prune --production
 
 # Production 
 FROM node:24-slim AS production 
-RUN apt-get update -y && apt-get install openssl 
+RUN apt-get update -y && apt-get install -y openssl curl && rm -rf /var/lib/apt/lists/*
 ENV NODE_ENV=production
 WORKDIR /app
 
