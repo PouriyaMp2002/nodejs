@@ -78,39 +78,39 @@ resource "aws_vpc_security_group_ingress_rule" "test-to-stage" {
 # SSH
 resource "aws_vpc_security_group_ingress_rule" "ssh-to-sonar" {
   security_group_id = aws_security_group.sonar.id
-  cidr_ipv4 = "${chomp(data.http.my_ip.response_body)}/32"
-  ip_protocol = "tcp"
-  from_port = 22
-  to_port = 22
+  cidr_ipv4         = "${chomp(data.http.my_ip.response_body)}/32"
+  ip_protocol       = "tcp"
+  from_port         = 22
+  to_port           = 22
 }
 
 # SSH from dev machine
 resource "aws_vpc_security_group_ingress_rule" "ssh-to-sonar" {
-  security_group_id = aws_security_group.sonar.id
+  security_group_id            = aws_security_group.sonar.id
   referenced_security_group_id = aws_security_group.test.id
-  ip_protocol = "tcp"
-  from_port = 22
-  to_port = 22
+  ip_protocol                  = "tcp"
+  from_port                    = 22
+  to_port                      = 22
 }
 
 # 9000 From my ip.
 resource "aws_vpc_security_group_ingress_rule" "9000-from-my-ip" {
   security_group_id = aws_security_group.sonar.id
-  cidr_ipv4 = "${chomp(data.http.my_ip.response_body)}/32"
-  ip_protocol = "tcp"
-  from_port = 9000
-  to_port = 9000
-  
+  cidr_ipv4         = "${chomp(data.http.my_ip.response_body)}/32"
+  ip_protocol       = "tcp"
+  from_port         = 9000
+  to_port           = 9000
+
 }
 
 # 9000 from Jenkins
 resource "aws_vpc_security_group_ingress_rule" "9000-from-Jenkins" {
-  security_group_id = aws_security_group.sonar.id
+  security_group_id            = aws_security_group.sonar.id
   referenced_security_group_id = aws_security_group.stage.id
-  ip_protocol = "tcp"
-  from_port = 9000
-  to_port = 9000
-  
+  ip_protocol                  = "tcp"
+  from_port                    = 9000
+  to_port                      = 9000
+
 }
 
 # Deploy machine
