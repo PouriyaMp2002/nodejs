@@ -1,6 +1,4 @@
 ---
-
-
 - name: Create app directory
   file:
     path: /opt/nodeapp

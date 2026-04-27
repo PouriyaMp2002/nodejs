@@ -58,7 +58,7 @@ resource "aws_vpc_security_group_ingress_rule" "SSH-Stage" {
 # 8080
 resource "aws_vpc_security_group_ingress_rule" "jenkins-stage" {
   security_group_id = aws_security_group.stage.id
-  cidr_ipv4         = "${chomp(data.http.my_ip.response_body)}/32"
+  cidr_ipv4         = "0.0.0.0/0"
   ip_protocol       = "tcp"
   from_port         = 8080
   to_port           = 8080
@@ -85,7 +85,7 @@ resource "aws_vpc_security_group_ingress_rule" "ssh-to-sonar" {
 }
 
 # SSH from dev machine
-resource "aws_vpc_security_group_ingress_rule" "ssh-to-sonar" {
+resource "aws_vpc_security_group_ingress_rule" "ssh-to-sonar-from-test" {
   security_group_id            = aws_security_group.sonar.id
   referenced_security_group_id = aws_security_group.test.id
   ip_protocol                  = "tcp"
@@ -171,6 +171,12 @@ resource "aws_vpc_security_group_egress_rule" "stage-out" {
 
 resource "aws_vpc_security_group_egress_rule" "deploy-out" {
   security_group_id = aws_security_group.deploy.id
+  cidr_ipv4         = "0.0.0.0/0"
+  ip_protocol       = "-1"
+}
+
+resource "aws_vpc_security_group_egress_rule" "sonar-out" {
+  security_group_id = aws_security_group.sonar.id
   cidr_ipv4         = "0.0.0.0/0"
   ip_protocol       = "-1"
 }

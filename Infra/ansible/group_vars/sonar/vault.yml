@@ -1,0 +1,3 @@
+sonar_db_user: sonar
+sonar_db_password: "sonar-db-pass"
+sonar_db_name: sonarqube

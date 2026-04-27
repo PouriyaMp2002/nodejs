@@ -23,6 +23,7 @@ compose:
 groups: 
   jenkins: "tags.Role == 'jenkins'"
   deploy: "tags.Role == 'deploy'"
+  sonar: "tags.Role == 'sonar'"
 
 
 # To test inventory: ansible-inventory -i inventory_aws.yml --graph

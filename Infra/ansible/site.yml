@@ -11,6 +11,12 @@
   roles: 
     - jenkins
 
+- name: Setup SonarQube servers
+  hosts: sonar
+  become: true
+  roles: 
+    - sonar
+
 - name: Setup deploy servers
   hosts: deploy 
   become: true
