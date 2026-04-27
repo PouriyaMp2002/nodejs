@@ -5,5 +5,5 @@ services:
     restart: unless-stopped
     env_file:
       - .env
-     
-    - "${APP_PORT}:3000"
+    ports:
+      - "${APP_PORT}:3000"
