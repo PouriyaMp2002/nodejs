@@ -1,7 +1,12 @@
+# Terraform: 
 Infra/terraform/.terraform/*
-.terraform.lock.hcl
 *.tfstate
 *.tfstate*
+
+#Credentials:
+*.vault_pass
+.env
+
+#Keys:
 *.pub
 *.pem
-.env

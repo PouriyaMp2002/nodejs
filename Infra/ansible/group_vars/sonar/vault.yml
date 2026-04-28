@@ -1,3 +1,7 @@
+# We should encrypt this file with ansible vault and give it a password. Then run this command
+# ansible-playbook -i inventory.yml site.yml --ask-vault-pass
+# If we have password filr, run this: ansible-playbook -i inventory.yml site.yml --vault-password-file ~/.vault_pass
+
 sonar_db_user: sonar
 sonar_db_password: "sonar-db-pass"
 sonar_db_name: sonarqube
