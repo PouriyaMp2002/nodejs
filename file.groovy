@@ -8,7 +8,7 @@ pipeline{
         IMAGE_URI = "${IMAGE_REPO}:${IMAGE_TAG}"
         IMAGE_LATEST = "${IMAGE_REPO}:latest"
         SONARSERVER = 'sonarqube-server'
-        SONARSCANNER = 'sonarqube-scanner'
+        SONARSCANNER = 'sonar-scanner'
     }
 
     stages{    
