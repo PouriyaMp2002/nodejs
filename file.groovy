@@ -33,15 +33,18 @@ pipeline{
         stage('SonarQube Scan') {
             steps {
                 withSonarQubeEnv("${SONARSERVER}") {
-                sh '''
-                    sonar-scanner \
-                    -Dsonar.projectKey=nodejs-simple-api-with-db \
-                    -Dsonar.projectName=nodejs-simple-api-with-db \
-                    -Dsonar.sources=src \
-                    -Dsonar.tests=tests \
-                    -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
-                    -Dsonar.sourceEncoding=UTF-8
-                '''
+                    script{
+                        def scannerHome = tool 'sonar-scanner'
+                        sh """
+                            ${scannerHome}/bin/sonar-scanner \
+                            -Dsonar.projectKey=nodejs-simple-api-with-db \
+                            -Dsonar.projectName=nodejs-simple-api-with-db \
+                            -Dsonar.sources=src \
+                            -Dsonar.tests=tests \
+                            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
+                            -Dsonar.sourceEncoding=UTF-8
+                        """
+                    }
                 }
             }
         }
