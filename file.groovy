@@ -15,11 +15,7 @@ pipeline{
 
         stage('fix and install Dep'){
             steps{
-                sh """
-                  npm audit fix
-                  npm install
-                  npm ci
-                """
+                sh 'npm ci'
             }
         }
 

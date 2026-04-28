@@ -10,3 +10,6 @@ Infra/terraform/.terraform/*
 #Keys:
 *.pub
 *.pem
+
+# Extra files
+/node_modules
