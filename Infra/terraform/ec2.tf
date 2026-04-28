@@ -10,6 +10,7 @@ resource "aws_instance" "Stage" {
   root_block_device {
     volume_size = 20
     volume_type = "gp3"
+    encrypted = true
   }
   vpc_security_group_ids = [aws_security_group.stage.id]
 
@@ -19,6 +20,11 @@ resource "aws_instance" "Stage" {
     Project = "nodejs-devops"
   }
   key_name = aws_key_pair.devops.key_name
+
+  metadata_options {
+    http_tokens = "required"
+  }
+
 }
 
 
@@ -29,6 +35,7 @@ resource "aws_instance" "Deployment" {
   root_block_device {
     volume_size = 20
     volume_type = "gp3"
+    encrypted = true
   }
   vpc_security_group_ids = [aws_security_group.deploy.id]
   tags = {
@@ -37,6 +44,11 @@ resource "aws_instance" "Deployment" {
     Project = "nodejs-devops"
   }
   key_name = aws_key_pair.devops.key_name
+
+  metadata_options {
+    http_tokens = "required"
+  }
+
 }
 
 
@@ -47,6 +59,7 @@ resource "aws_instance" "Test" {
   root_block_device {
     volume_size = 15
     volume_type = "gp3"
+    encrypted = true
   }
   vpc_security_group_ids = [aws_security_group.test.id]
 
@@ -54,6 +67,11 @@ resource "aws_instance" "Test" {
     Name = "dev"
   }
   key_name = aws_key_pair.devops.key_name
+
+  metadata_options {
+    http_tokens = "required"
+  }
+
 }
 
 
@@ -64,6 +82,7 @@ resource "aws_instance" "SQ" {
   root_block_device {
     volume_size = 30
     volume_type = "gp3"
+    encrypted = true
   }
   vpc_security_group_ids = [aws_security_group.sonar.id]
 
@@ -73,4 +92,9 @@ resource "aws_instance" "SQ" {
     Project = "nodejs-devops"
   }
   key_name = aws_key_pair.devops.key_name
+
+  metadata_options {
+    http_tokens = "required"
+  }
+
 }

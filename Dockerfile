@@ -1,7 +1,7 @@
 # Build stage.
 FROM node:24-slim AS builder
 WORKDIR /app
-RUN apt-get update -y && apt-get install -y openssl
+RUN apt-get update -y && apt-get install -y --no-install-recommends openssl
 COPY package*.json ./
 RUN npm ci
 
@@ -14,7 +14,7 @@ RUN npm prune --production
 
 # Production 
 FROM node:24-slim AS production 
-RUN apt-get update -y && apt-get install -y openssl curl && rm -rf /var/lib/apt/lists/*
+RUN apt-get update -y && apt-get install -y --no-install-recommends openssl curl && rm -rf /var/lib/apt/lists/*
 ENV NODE_ENV=production
 WORKDIR /app
 
@@ -25,6 +25,9 @@ COPY --from=builder /app/prisma ./prisma
 COPY src/public ./dist/public
 
 EXPOSE 3000 
+RUN chown -R node:node /app
+USER node
+
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:3000/health || exit 1
 
