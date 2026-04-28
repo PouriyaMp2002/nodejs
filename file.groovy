@@ -7,15 +7,11 @@ pipeline{
         IMAGE_REPO = 'pouriyamp/nodejs-simple-api-with-db'
         IMAGE_URI = "${IMAGE_REPO}:${IMAGE_TAG}"
         IMAGE_LATEST = "${IMAGE_REPO}:latest"
-        SONARQUBE_ENV = 'sonarqube-server'
+        SONARSERVER = 'sonarqube-server'
+        SONARSCANNER = 'sonarqube-scanner'
     }
 
     stages{    
-        stage('checkout'){
-            steps{
-                git 'https://github.com/repo.git'
-            }
-        }
 
         stage('install Dep'){
             steps{
@@ -36,7 +32,7 @@ pipeline{
 
         stage('SonarQube Scan') {
             steps {
-                withSonarQubeEnv("${SONARQUBE_ENV}") {
+                withSonarQubeEnv("${SONARSERVER}") {
                 sh '''
                     sonar-scanner \
                     -Dsonar.projectKey=nodejs-simple-api-with-db \

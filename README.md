@@ -83,3 +83,8 @@ Pay attentio: DO NOT push it to git if you have credentials.
 inventory file should have this name: inventory.aws_ec2.yml
 
 -- To connect ansible to machine, we should at first ssh to the machine for authorization, then use ansible. 
+===============================================================
+Jenkins 
+
+Create Sonarqube webhook secret => openssl rand -hex 32
+Create a cred in jenkins with this var and SQ webhook 
