@@ -60,7 +60,7 @@ pipeline{
 
         stage('Trivy Filesystem Scan') {
             steps {
-                sh 'trivy fs --exit-code 1 --severity HIGH,CRITICAL .'
+                sh 'trivy fs --exit-code 1 --severity HIGH,CRITICAL --scanners vuln,secret,misconfig .'
             }
         }
 
