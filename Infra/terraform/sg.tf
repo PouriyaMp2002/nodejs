@@ -94,7 +94,7 @@ resource "aws_vpc_security_group_ingress_rule" "ssh-to-sonar-from-test" {
 }
 
 # 9000 From my ip.
-resource "aws_vpc_security_group_ingress_rule" "9000-from-my-ip" {
+resource "aws_vpc_security_group_ingress_rule" "sq-from-my-ip" {
   security_group_id = aws_security_group.sonar.id
   cidr_ipv4         = "${chomp(data.http.my_ip.response_body)}/32"
   ip_protocol       = "tcp"
@@ -104,7 +104,7 @@ resource "aws_vpc_security_group_ingress_rule" "9000-from-my-ip" {
 }
 
 # 9000 from Jenkins
-resource "aws_vpc_security_group_ingress_rule" "9000-from-Jenkins" {
+resource "aws_vpc_security_group_ingress_rule" "sq-from-Jenkins" {
   security_group_id            = aws_security_group.sonar.id
   referenced_security_group_id = aws_security_group.stage.id
   ip_protocol                  = "tcp"
