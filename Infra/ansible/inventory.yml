@@ -16,14 +16,14 @@ hostnames:
 
 compose:
   ansible_host: private_ip_address
-  ansible_user: ubuntu
-  ansible_ssh_private_key_file: "/c/Users/Pouriya/Desktop/project/Infra/devops" 
+  ansible_user: "'ubuntu'"
+  ansible_ssh_private_key_file: "'/c/Users/Pouriya/Desktop/project/Infra/devops'"
   # Must be  accessible with ansible runtime env. 
 
-groups: 
-  jenkins: "tags.Role == 'jenkins'"
-  deploy: "tags.Role == 'deploy'"
-  sonar: "tags.Role == 'sonar'"
+groups:
+  jenkins: ec2_tags.Role == 'jenkins'
+  deploy: ec2_tags.Role == 'deploy'
+  sonar: ec2_tags.Role == 'sonar'
 
 
 # To test inventory: ansible-inventory -i inventory_aws.yml --graph

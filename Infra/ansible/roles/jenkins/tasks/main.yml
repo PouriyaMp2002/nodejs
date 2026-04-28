@@ -81,12 +81,13 @@
   command: apt-get update
   changed_when: false
 
-- name: Install Jenkins, Node.js, Trivy
+- name: Install Jenkins, Node.js, Trivy and openjdk
   apt:
     name:
       - jenkins
       - nodejs
       - trivy
+      - openjdk-25-jdk
     state: present
 
 # ---------- SERVICE ----------

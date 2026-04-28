@@ -22,3 +22,11 @@ output "deploy-machine-private" {
 output "deploy-machine-public_ip" {
   value = aws_instance.Deployment.public_ip
 }
+
+output "sonar-machine-private" {
+  value = aws_instance.SQ.private_ip
+}
+
+output "sonar-machine-public" {
+  value = aws_instance.SQ.public_ip
+}

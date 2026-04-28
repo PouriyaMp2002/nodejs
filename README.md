@@ -79,3 +79,7 @@ ansible-playbook deploy_app.yml -e "@vars/dev.yml"
 Pay attentio: DO NOT push it to git if you have credentials. 
 
 4- in jenkins pipeline. 
+
+inventory file should have this name: inventory.aws_ec2.yml
+
+-- To connect ansible to machine, we should at first ssh to the machine for authorization, then use ansible. 

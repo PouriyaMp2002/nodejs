@@ -69,6 +69,8 @@ resource "aws_instance" "SQ" {
 
   tags = {
     Name = "SonarQube"
+    Role    = "sonar"
+    Project = "nodejs-devops"
   }
   key_name = aws_key_pair.devops.key_name
 }
