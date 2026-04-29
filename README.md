@@ -1,4 +1,4 @@
-on your laptop, apply terraform directory in order to make ec2 and others. 
+ on your laptop, apply terraform directory in order to make ec2 and others. 
 Then WITH YOUR laptop again, execute ansible and test configs like this.(you can make an extra machine, or use your own laptop.) 
 
 BEFORE RUN ANSIBLE, DO THESE
