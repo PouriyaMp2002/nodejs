@@ -8,15 +8,18 @@ RUN npm ci
 COPY tsconfig.json ./
 COPY src/ ./src/
 COPY prisma ./prisma
+
+RUN npx prisma generate
 RUN npm run build 
 RUN npm prune --production
 
 
 # Production 
-FROM node:24-slim AS production 
+FROM node:20-bookworm-slim AS production 
+WORKDIR /app
+
 RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends openssl curl && rm -rf /var/lib/apt/lists/*
 ENV NODE_ENV=production
-WORKDIR /app
 
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
