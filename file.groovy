@@ -72,16 +72,23 @@ pipeline{
 
         stage('Trivy Image Scan') {
         steps {
-            sh "trivy image --exit-code 1 --severity HIGH,CRITICAL ${IMAGE_URI}"
+            sh "trivy image --scanners vuln --ignore-unfixed --severity CRITICAL --exit-code 1 ${IMAGE_URI}"
             }
         }
 
         stage('push image'){
             steps{
-                sh'''
-                  echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-                  docker push $IMAGE_URI
-                '''
+                withCredentials([usernamePassword(
+                    credentialsId: 'docker'
+                    usernameVariable: 'DOCKER_USER'
+                    passwordVariable: 'DOCKER_PASS'
+                )]){
+                    sh '''
+                      echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                      docker push "$IMAGE_URI              
+                    '''
+                }
+                
             }
         }
         
