@@ -1,5 +1,5 @@
 # Build stage.
-FROM node:24-slim AS builder
+FROM node:20-bookworm-slim AS builder
 WORKDIR /app
 RUN apt-get update -y && apt-get install -y --no-install-recommends openssl
 COPY package*.json ./
@@ -14,7 +14,7 @@ RUN npm prune --production
 
 # Production 
 FROM node:24-slim AS production 
-RUN apt-get update -y && apt-get install -y --no-install-recommends openssl curl && rm -rf /var/lib/apt/lists/*
+RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends openssl curl && rm -rf /var/lib/apt/lists/*
 ENV NODE_ENV=production
 WORKDIR /app
 
