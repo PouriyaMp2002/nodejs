@@ -96,9 +96,9 @@ pipeline{
         stage('Deploy to dev'){
             steps{
                 sh '''
-                  ansible-playbook -i Infra/ansible/inventory.yml Infra/ansible/deploy_inside_jenkins.yml \
+                  ansible-playbook -i Infra/ansible/inventory_aws_ec2.yml Infra/ansible/deploy_inside_jenkins.yml \
                   --extra-vars "image_uri=$IMAGE_URI" \
-                  --extra-vars "database_url=$DATABASE_URL" \
+                  --extra-vars "database_url=$database_url" \
                   --extra-vars "app_port=3000"
                 '''
             }
