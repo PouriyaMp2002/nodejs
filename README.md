@@ -88,3 +88,4 @@ Jenkins
 
 Create Sonarqube webhook secret => openssl rand -hex 32
 Create a cred in jenkins with this var and SQ webhook 
+  
