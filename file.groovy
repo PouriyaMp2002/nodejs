@@ -95,12 +95,21 @@ pipeline{
         
         stage('Deploy to dev'){
             steps{
-                sh '''
-                  ansible-playbook -i Infra/ansible/inventory_aws_ec2.yml Infra/ansible/deploy_inside_jenkins.yml \
-                  --extra-vars "image_uri=$IMAGE_URI" \
-                  --extra-vars "database_url=$database_url" \
-                  --extra-vars "app_port=3000"
-                '''
+                withCredentials([
+                    string(credentialsId: 'aws-access-key-id', variable: 'AWS_ACCESS_KEY_ID'),
+                    string(credentialsId: 'aws-secret-access-key', variable: 'AWS_SECRET_ACCESS_KEY'),
+                    string(credentialsId: 'database-url', variable: 'DATABASE_URL')
+                ]){
+                    sh '''
+                    export AWS_DEFAULT_REGION=us-east-1
+                    
+                    ansible-playbook -i Infra/ansible/inventory_aws_ec2.yml Infra/ansible/deploy_inside_jenkins.yml \
+                    --extra-vars "image_uri=$IMAGE_URI" \
+                    --extra-vars "database_url=$database_url" \
+                    --extra-vars "app_port=3000"
+
+                    '''
+                }
             }
         }
     }
