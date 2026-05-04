@@ -4,27 +4,20 @@ regions:
   - us-east-1
 
 filters:
-  instance-state-name: # It takes only running state machines
+  instance-state-name:
     - running
-
-  tag:Project: #Takes ONLY this tag from ec2s
+  tag:Project:
     - nodejs-devops
 
 hostnames:
-  - tag:Name #It's better to take it from their names. 
-  
+  - tag:Name
 
 compose:
   ansible_host: private_ip_address
   ansible_user: "'ubuntu'"
-  ansible_ssh_private_key_file: "'/var/lib/jenkins/.ssh/devops.pem'" #Private key path INSIDE jenkins user in Linux
-  # Must be  accessible with ansible runtime env. 
+  ansible_ssh_private_key_file: "'/var/lib/jenkins/.ssh/devops.pem'"
 
 groups:
-  jenkins: tags.Role == 'jenkins'
-  deploy: tags.Role == 'deploy'
-  sonar: tags.Role == 'sonar'
-
-
-# To test inventory: ansible-inventory -i inventory_aws.yml --graph
-# Then: ansible-inventory -i inventory_aws.yml --list
+  jenkins: tags.get('Role') == 'jenkins'
+  deploy: tags.get('Role') == 'deploy'
+  sonar: tags.get('Role') == 'sonar'

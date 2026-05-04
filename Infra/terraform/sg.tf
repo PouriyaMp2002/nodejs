@@ -148,6 +148,30 @@ resource "aws_vpc_security_group_ingress_rule" "prometheus" {
   to_port           = 9090
 }
 
+resource "aws_vpc_security_group_ingress_rule" "grafana" {
+  security_group_id = aws_security_group.deploy.id
+  cidr_ipv4         = "${chomp(data.http.my_ip.response_body)}/32"
+  ip_protocol       = "tcp"
+  from_port         = 3001
+  to_port           = 3001
+}
+
+resource "aws_vpc_security_group_ingress_rule" "node-exporter" {
+  security_group_id = aws_security_group.deploy.id
+  cidr_ipv4         = "${chomp(data.http.my_ip.response_body)}/32"
+  ip_protocol       = "tcp"
+  from_port         = 9100
+  to_port           = 9100
+}
+
+resource "aws_vpc_security_group_ingress_rule" "cadvisor" {
+  security_group_id = aws_security_group.deploy.id
+  cidr_ipv4         = "${chomp(data.http.my_ip.response_body)}/32"
+  ip_protocol       = "tcp"
+  from_port         = 8080
+  to_port           = 8080
+}
+
 resource "aws_vpc_security_group_ingress_rule" "deploy_from_my_ip" {
   security_group_id = aws_security_group.deploy.id
   cidr_ipv4         = "${chomp(data.http.my_ip.response_body)}/32"
