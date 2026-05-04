@@ -1,7 +1,7 @@
 # Build stage.
 FROM node:20-bookworm-slim AS builder
 WORKDIR /app
-RUN apt-get update -y && apt-get install -y --no-install-recommends openssl
+RUN apt-get update -y && apt-get install -y --no-install-recommends openssl && rm -rf /var/lib/apt/lists/*
 COPY package*.json ./
 RUN npm ci
 
@@ -11,24 +11,24 @@ COPY prisma ./prisma
 
 RUN npx prisma generate
 RUN npm run build 
-RUN npm prune --production
+RUN npm prune --omit=dev
 
 
 # Production 
 FROM node:20-bookworm-slim AS production 
 WORKDIR /app
 
-RUN apt-get update -y && apt-get upgrade -y && apt-get install -y --no-install-recommends openssl curl && rm -rf /var/lib/apt/lists/*
+RUN apt-get update -y && apt-get install -y --no-install-recommends openssl curl && rm -rf /var/lib/apt/lists/*
 ENV NODE_ENV=production
 
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package*.json ./
-COPY --from=builder /app/prisma ./prisma
-COPY src/public ./dist/public
-
 EXPOSE 3000 
-RUN chown -R node:node /app
+
+COPY --from=builder --chown=node:node /app/dist ./dist
+COPY --from=builder --chown=node:node /app/node_modules ./node_modules
+COPY --from=builder --chown=node:node /app/package*.json ./
+COPY --from=builder --chown=node:node /app/prisma ./prisma
+COPY --chown=node:node src/public ./dist/public
+
 USER node
 
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
