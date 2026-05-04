@@ -21,9 +21,9 @@ compose:
   # Must be  accessible with ansible runtime env. 
 
 groups:
-  jenkins: ec2_tags.Role == 'jenkins'
-  deploy: ec2_tags.Role == 'deploy'
-  sonar: ec2_tags.Role == 'sonar'
+  jenkins: tags.Role == 'jenkins'
+  deploy: tags.Role == 'deploy'
+  sonar: tags.Role == 'sonar'
 
 
 # To test inventory: ansible-inventory -i inventory_aws.yml --graph
