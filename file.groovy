@@ -103,7 +103,7 @@ pipeline{
                     sh '''
                     export AWS_DEFAULT_REGION=us-east-1
 
-                    ansible-playbook -i Infra/ansible/inventory_aws_ec2.yml Infra/ansible/deploy_inside_jenkins.yml \
+                    ansible-playbook -i Infra/ansible/aws_ec2.yml Infra/ansible/deploy_inside_jenkins.yml \
                     --extra-vars "image_uri=$IMAGE_URI" \
                     --extra-vars "database_url=$database_url" \
                     --extra-vars "app_port=3000"
